@@ -7,6 +7,7 @@ import resolver from './utils/imports';
 // PAGES
 import StakingPage from './containers/staking/StakingPage';
 import AdaRedemptionPage from './containers/wallet/AdaRedemptionPage';
+import PaperWalletPage from './containers/wallet/PaperWalletPage';
 import NoWalletsPage from './containers/wallet/NoWalletsPage';
 import LanguageSelectionPage from './containers/profile/LanguageSelectionPage';
 import Settings from './containers/settings/Settings';
@@ -41,6 +42,7 @@ export const Routes = (
       <Route path={ROUTES.WALLETS.SEND} component={WalletSendPage} />
       <Route path={ROUTES.WALLETS.RECEIVE} component={WalletReceivePage} />
       <Route path={ROUTES.WALLETS.SETTINGS} component={WalletSettingsPage} />
+      <Route path={ROUTES.WALLETS.PAPER_WALLET} component={PaperWalletPage} />
     </Route>
     <Route path="/settings" component={Settings}>
       <IndexRedirect to="general" />

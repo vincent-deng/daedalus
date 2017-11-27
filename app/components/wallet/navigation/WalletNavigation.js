@@ -104,6 +104,15 @@ export default class WalletNavigation extends Component<Props> {
           />
         </div>
 
+        <div className={styles.navItem}>
+          <WalletNavButton
+            label="Paper Wallet"
+            icon={settingsIcon}
+            isActive={isActiveNavItem('paper-wallet')}
+            onClick={() => onNavItemClick('paper-wallet')}
+          />
+        </div>
+
       </div>
     );
   }

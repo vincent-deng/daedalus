@@ -17,6 +17,7 @@ export const ROUTES = {
     SEND: '/wallets/:id/send',
     RECEIVE: '/wallets/:id/receive',
     SETTINGS: '/wallets/:id/settings',
+    PAPER_WALLET: '/wallets/:id/paper-wallet',
   },
   SETTINGS: {
     ROOT: '/settings',
