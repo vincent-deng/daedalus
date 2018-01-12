@@ -39,6 +39,6 @@ launcherLogsPrefix: $HOME/Library/Application Support/Daedalus/Logs/pub/
 
 configuration:
   filePath: ./configuration.yaml
-  key: dev
+  key: mainnet_wallet_macos64
   systemStart: null
   seed: null
