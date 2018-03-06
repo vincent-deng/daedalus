@@ -22,14 +22,14 @@ type State = {
 }
 
 // define your function for generating rotated text
-const writeRotatedText = (text: string) => {
-  const fontSize = 8;
+const writeRotatedText = ({ text, width, height }) => {
   const verticalSpacing = 3;
+  const fontSize = height - verticalSpacing;
   const qualityMultiplier = 4;
   // ^^ qualityMultiplier is used to generate HQ canvas and then fit it to A4 page width
   const canvas = document.createElement('canvas');
-  canvas.width = 500 * qualityMultiplier;
-  canvas.height = (fontSize + verticalSpacing) * qualityMultiplier;
+  canvas.width = width * qualityMultiplier;
+  canvas.height = height * qualityMultiplier;
   const ctx = canvas.getContext('2d');
   ctx.font = `${fontSize * qualityMultiplier}pt Arial`;
   ctx.save();
@@ -59,41 +59,35 @@ export default class PaperWallet extends Component<Props, State> {
         height: 841.89,
       },
       { // Wallet address
-        image: writeRotatedText('Wallet address'),
-        fit: [500, 11],
+        image: writeRotatedText({ text: 'Wallet address', width: 500, height: 10 }),
+        fit: [500, 10],
         alignment: 'center',
-        absolutePosition: { x: 0, y: 750 },
+        absolutePosition: { x: 0, y: 620 },
       },
       { // Wallet address QR code
-        qr: this.props.walletAddress,
+        qr: 'DdzFFzCqrhtBmXCm2p4cX1rZ72HZb5cTucVpDynjmjDyzLUDmLa53KYSa2hew1Ew1KytXjCdicFehohasAqPL2j4qV4vSL4kaEjMnKBq', // this.props.walletAddress,
         alignment: 'center',
         background: '#f8fbfd',
         fit: 80,
         foreground: '#3b5c9b',
-        absolutePosition: { x: 0, y: 674 },
+        absolutePosition: { x: 0, y: 540 },
       },
       { // Wallet address - line 1
-        image: writeRotatedText('DdzFFzCqrhtBmXCm2p4cX1rZ72HZb5cTucVpDyn'),
-        fit: [500, 11],
+        image: writeRotatedText({ text: 'DdzFFzCqrhtBmXCm2p4cX1rZ72HZb5cTucVpDynjmjDyzLUDmLa5', width: 500, height: 8 }),
+        fit: [500, 8],
         alignment: 'center',
-        absolutePosition: { x: 0, y: 648 },
+        absolutePosition: { x: 0, y: 525 },
       },
       { // Wallet address - line 2
-        image: writeRotatedText('jmjDyzLUDmLa53KYSa2hew1Ew1KytXjCdicFeho'),
-        fit: [500, 11],
+        image: writeRotatedText({ text: '3KYSa2hew1Ew1KytXjCdicFehohasAqPL2j4qV4vSL4kaEjMnKBq', width: 500, height: 8 }),
+        fit: [500, 8],
         alignment: 'center',
-        absolutePosition: { x: 0, y: 636 },
-      },
-      { // Wallet address - line 3
-        image: writeRotatedText('hasAqPL2j4qV4vSL4kaEjMnKBq'),
-        fit: [500, 11],
-        alignment: 'center',
-        absolutePosition: { x: 0, y: 624 },
+        absolutePosition: { x: 0, y: 515 },
       },
       { // Daedalus version and build
-        image: writeRotatedText('Daedalus 0.9.0#1.1.0.408'),
-        fit: [500, 11],
-        absolutePosition: { x: 0, y: 570 },
+        image: writeRotatedText({ text: 'Daedalus 0.9.0#1.1.0.408', width: 100, height: 8 }),
+        fit: [100, 8],
+        absolutePosition: { x: 343, y: 493 },
       },
       // 2nd page - Private key
       { // Page background
@@ -104,106 +98,91 @@ export default class PaperWallet extends Component<Props, State> {
         pageBreak: 'before',
       },
       { // Shielded recovery phrase
-        image: writeRotatedText('Shielded recovery phrase'),
-        fit: [500, 11],
+        image: writeRotatedText({ text: 'Shielded recovery phrase', width: 500, height: 10 }),
+        fit: [500, 10],
         alignment: 'center',
-        absolutePosition: { x: 0, y: 350 },
+        absolutePosition: { x: 0, y: 270 },
       },
       { // Shielded recovery phrase - word 1
-        image: writeRotatedText('mnemonic-1'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 400, y: 330 },
+        image: writeRotatedText({ text: 'mnemonic-1', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 375, y: 245 },
       },
       { // Shielded recovery phrase - word 2
-        image: writeRotatedText('mnemonic-2'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 300, y: 330 },
+        image: writeRotatedText({ text: 'mnemonic-2', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 325, y: 245 },
       },
       { // Shielded recovery phrase - word 3
-        image: writeRotatedText('mnemonic-3'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 200, y: 330 },
+        image: writeRotatedText({ text: 'mnemonic-3', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 275, y: 245 },
       },
       { // Shielded recovery phrase - word 4
-        image: writeRotatedText('mnemonic-4'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 100, y: 330 },
+        image: writeRotatedText({ text: 'mnemonic-4', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 225, y: 245 },
       },
       { // Shielded recovery phrase - word 5
-        image: writeRotatedText('mnemonic-5'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 0, y: 330 },
+        image: writeRotatedText({ text: 'mnemonic-5', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 175, y: 245 },
       },
       { // Shielded recovery phrase - word 6
-        image: writeRotatedText('mnemonic-6'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 400, y: 310 },
+        image: writeRotatedText({ text: 'mnemonic-6', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 375, y: 230 },
       },
       { // Shielded recovery phrase - word 7
-        image: writeRotatedText('mnemonic-7'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 300, y: 310 },
+        image: writeRotatedText({ text: 'mnemonic-7', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 325, y: 230 },
       },
       { // Shielded recovery phrase - word 8
-        image: writeRotatedText('mnemonic-8'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 200, y: 310 },
+        image: writeRotatedText({ text: 'mnemonic-8', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 275, y: 230 },
       },
       { // Shielded recovery phrase - word 9
-        image: writeRotatedText('mnemonic-9'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 100, y: 310 },
+        image: writeRotatedText({ text: 'mnemonic-9', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 225, y: 230 },
       },
       { // Shielded recovery phrase - word 10
-        image: writeRotatedText('mnemonic-10'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 0, y: 310 },
+        image: writeRotatedText({ text: 'mnemonic-10', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 175, y: 230 },
       },
       { // Shielded recovery phrase - word 11
-        image: writeRotatedText('mnemonic-11'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 400, y: 290 },
+        image: writeRotatedText({ text: 'mnemonic-11', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 375, y: 215 },
       },
       { // Shielded recovery phrase - word 12
-        image: writeRotatedText('mnemonic-12'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 300, y: 290 },
+        image: writeRotatedText({ text: 'mnemonic-12', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 325, y: 215 },
       },
       { // Shielded recovery phrase - word 13
-        image: writeRotatedText('mnemonic-13'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 200, y: 290 },
+        image: writeRotatedText({ text: 'mnemonic-13', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 275, y: 215 },
       },
       { // Shielded recovery phrase - word 14
-        image: writeRotatedText('mnemonic-14'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 100, y: 290 },
+        image: writeRotatedText({ text: 'mnemonic-14', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 225, y: 215 },
       },
       { // Shielded recovery phrase - word 15
-        image: writeRotatedText('mnemonic-15'),
-        fit: [100, 11],
-        alignment: 'center',
-        absolutePosition: { x: 0, y: 290 },
+        image: writeRotatedText({ text: 'mnemonic-15', width: 50, height: 8 }),
+        fit: [50, 8],
+        absolutePosition: { x: 175, y: 215 },
       },
       { // Password
-        image: writeRotatedText('Password'),
-        fit: [500, 11],
+        image: writeRotatedText({ text: 'Password', width: 500, height: 10 }),
+        fit: [500, 10],
         alignment: 'center',
-        absolutePosition: { x: 0, y: 250 },
+        absolutePosition: { x: 0, y: 180 },
       },
     ],
     pageMargins: [0, 0],
