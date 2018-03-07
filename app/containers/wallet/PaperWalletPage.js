@@ -12,16 +12,12 @@ export default class PaperWalletPage extends Component<Props> {
   static defaultProps = { actions: null, stores: null };
 
   render() {
-    const { wallets } = this.props.stores.ada;
-    const wallet = wallets.active;
-
-    // Guard against potential null values
-    if (!wallet) throw new Error('Active wallet required for PaperWalletPage.');
+    const { addresses } = this.props.stores.ada;
+    const walletAddress = addresses.active ? addresses.active.id : '';
 
     return (
       <PaperWallet
-        walletName={wallet.name}
-        walletAddress={wallet.address}
+        walletAddress={walletAddress}
       />
     );
   }
