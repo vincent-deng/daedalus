@@ -2,16 +2,21 @@
 {-# LANGUAGE NoImplicitPrelude   #-}
 {-# LANGUAGE OverloadedStrings   #-}
 {-# LANGUAGE RecordWildCards     #-}
+
+{-# LANGUAGE TypeOperators     #-}
+{-# LANGUAGE DataKinds         #-}
 module Config
   ( generateConfig
   , Request(..)
   , OS(..), Cluster(..), Config(..)
-  , Flag(..), flag
+  , flag
   , optReadLower, argReadLower
   , Options(..), optionsParser
   -- Re-export Turtle:
   , options
   ) where
+
+import Options.Generic (Generic, ParseRecord, type (<?>), unHelpful)
 
 import qualified Control.Exception
 
@@ -46,11 +51,6 @@ import           Prelude
 import           Types
 
 
-
-flag :: Flag a => a -> ArgName -> Char -> Optional HelpMessage -> Parser a
-flag effect long ch help = (\case
-                               True  -> effect
-                               False -> opposite effect) <$> switch long ch help
 
 diagReadCaseInsensitive :: (Bounded a, Enum a, Read a, Show a) => String -> Maybe a
 diagReadCaseInsensitive str = diagRead $ Data.Char.toLower <$> str
@@ -91,7 +91,7 @@ optionsParser = Options
   <*>                optText "output"              'o' "Installer output file"
   <*> (optional   $
       (PullReq   <$> optText "pull-request"        'r' "Pull request #"))
-  <*> flag TestInstaller     "test-installer"      't' "Test installers after building"
+  <*> flag testInstaller     "test-installer"      't' "Test installers after building"
   <*> pure Buildkite -- NOTE: this is filled in by auto-detection
 
 
@@ -102,6 +102,34 @@ lshow = pack . fmap Data.Char.toLower . show
 dhallTopExpr :: Text -> Config -> OS -> Cluster -> Text
 dhallTopExpr path Launcher os cluster = path <> "/launcher.dhall ( "<>path<>"/" <> lshow cluster <> ".dhall "<>path<>"/" <> lshow os <> ".dhall ) "<>path<>"/" <> lshow os <> ".dhall"
 dhallTopExpr path Topology os cluster = path <> "/topology.dhall ( "<>path<>"/" <> lshow cluster <> ".dhall "<>path<>"/" <> lshow os <> ".dhall )"
+
+data Options' = Options'
+    { explain  :: Bool <?> "Explain error messages in detail"
+    , omitNull :: Bool <?> "Omit record fields that are null"
+    } deriving (Generic, ParseRecord)
+
+toYaml :: Options' -> Dhall.Text -> IO Data.ByteString.ByteString
+toYaml Options'{..} inText =
+  (if Options.Generic.unHelpful explain then Dhall.detailed else id) $ (do
+    expr <- case Dhall.Parser.exprFromText (Directed "(stdin)" 0 0 0 0) inText of
+              Left  err  -> Control.Exception.throwIO err
+              Right expr -> return expr
+
+    expr' <- Dhall.Import.load expr
+    case Dhall.TypeCheck.typeOf expr' of
+      Left  err -> Control.Exception.throwIO err
+      Right _   -> return ()
+
+    json <- case Dhall.JSON.dhallToJSON expr' of
+      Left err  -> Control.Exception.throwIO err
+      Right json -> return json
+
+    let filteredJSON =
+          if Options.Generic.unHelpful omitNull
+          then Dhall.JSON.omitNull json
+          else json
+
+    pure $ Data.Yaml.encode filteredJSON )
 
 generateConfig :: Request -> FilePath -> FilePath -> IO ()
 generateConfig Request{..} configRoot outFile = handle $ do
